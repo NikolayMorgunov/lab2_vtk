@@ -15,12 +15,11 @@ class CalcMesh:
         self.nodes = np.array([nodes_coords[0::3], nodes_coords[1::3], nodes_coords[2::3]])
 
         # Модельная скалярная величина распределена как-то вот так
-        min_coord_0 = np.ones(len(nodes_coords) // 3) * (np.min(self.nodes[0, :]) + 0.31)
-        min_coord_1 = np.ones(len(nodes_coords) // 3) * np.max(self.nodes[1, :])
-        min_coord_2 = np.ones(len(nodes_coords) // 3) * (np.min(self.nodes[2, :]) + 0.44)
+        min_coord_0 = np.ones(len(nodes_coords) // 3) * (np.min(self.nodes[0, :])) * 0
+        min_coord_1 = np.ones(len(nodes_coords) // 3) * np.max(self.nodes[1, :]) * 0
+        min_coord_2 = np.ones(len(nodes_coords) // 3) * (np.min(self.nodes[2, :]))
 
-        self.smth = np.power((np.power(self.nodes[0, :] - min_coord_0, 2) + np.power(self.nodes[1, :] - min_coord_1, 2) \
-                              + np.power(self.nodes[2, :] - min_coord_2, 2)), 0.5) * 1750
+        self.smth = (np.max(self.nodes[2, :]) - self.nodes[2, :]) * 1000
 
         # Тут может быть скорость, но сейчас здесь нули
         max_y = np.max(self.nodes[1, :])
@@ -36,7 +35,6 @@ class CalcMesh:
         for i in range(len(nodes_coords) // 3):
             if nodes_coords[i * 3 + 1] < -0.46875:
                 self.velocity[2][i] = (max_delta - delta[i]) * (-0.5)
-
 
         # Пройдём по элементам в модели gmsh
         self.tetrs = np.array([tetrs_points[0::4], tetrs_points[1::4], tetrs_points[2::4], tetrs_points[3::4]])
